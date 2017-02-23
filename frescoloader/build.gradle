@@ -1,15 +1,20 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.Misutesu'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
+
     defaultConfig {
-        applicationId "com.mistesu.frescoloader"
         minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -25,5 +30,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.facebook.fresco:fresco:0.12.0'
+    compile 'jp.wasabeef:fresco-processors:2.0.0'
     testCompile 'junit:junit:4.12'
 }
