@@ -74,7 +74,9 @@ public class FrescoLoader {
         private int circleRound = 0;
         private int borderWidth = 0;
         private int borderColor = 0;
+        private boolean clickRetryEnable = false;
         private Postprocessor postprocessor;
+        private OnDownloadListener mOnDownloadListener;
 
         private Uri mUri;
 
@@ -135,8 +137,18 @@ public class FrescoLoader {
             return this;
         }
 
+        public Builder setRetryEnable(boolean enable) {
+            clickRetryEnable = enable;
+            return this;
+        }
+
         public Builder setPostprocessor(@NonNull Postprocessor postprocessor) {
             this.postprocessor = postprocessor;
+            return this;
+        }
+
+        public Builder setOnDownloadListener(OnDownloadListener onDownloadListener) {
+            mOnDownloadListener = onDownloadListener;
             return this;
         }
 
@@ -189,6 +201,8 @@ public class FrescoLoader {
 
                 simpleDraweeView.setController(Fresco.newDraweeControllerBuilder()
                         .setImageRequest(requestBuilder.build())
+                        .setControllerListener(new ControllerListener(mOnDownloadListener))
+                        .setTapToRetryEnabled(clickRetryEnable)
                         .setOldController(simpleDraweeView.getController())
                         .build());
             }
