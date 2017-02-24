@@ -32,8 +32,6 @@ public class FrescoLoader {
     public static final int FIT_XY = 3;
     public static final int CENTER_INSIDE = 4;
 
-    public static final int CIRCLE = -1;
-
     private FrescoLoader() {
     }
 
