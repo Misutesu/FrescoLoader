@@ -2,6 +2,7 @@ package com.mistesu.frescoloader;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -57,7 +58,7 @@ public class FrescoLoader {
         return new Builder(url);
     }
 
-    public static Builder load(int resId) {
+    public static Builder load(@DrawableRes int resId) {
         return new Builder("res:// /" + resId);
     }
 
@@ -223,7 +224,7 @@ public class FrescoLoader {
         imagePipeline.evictFromCache(uri);
     }
 
-    public static Uri getUri(int resId) {
+    public static Uri getUri(@DrawableRes int resId) {
         return getUri("res:// /" + resId);
     }
 
