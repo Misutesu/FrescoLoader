@@ -21,13 +21,13 @@ public class ControllerListener extends BaseControllerListener<ImageInfo> {
     public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
         super.onFinalImageSet(id, imageInfo, animatable);
         if (mOnDownloadListener != null)
-            mOnDownloadListener.onDownloadSuccess();
+            mOnDownloadListener.onDownloadEnd(true);
     }
 
     @Override
     public void onFailure(String id, Throwable throwable) {
         super.onFailure(id, throwable);
         if (mOnDownloadListener != null)
-            mOnDownloadListener.onDownloadFail();
+            mOnDownloadListener.onDownloadEnd(false);
     }
 }

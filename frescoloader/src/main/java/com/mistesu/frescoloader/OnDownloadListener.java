@@ -5,7 +5,5 @@ package com.mistesu.frescoloader;
  */
 
 public interface OnDownloadListener {
-    void onDownloadSuccess();
-
-    void onDownloadFail();
+    void onDownloadEnd(boolean isSuccess);
 }
