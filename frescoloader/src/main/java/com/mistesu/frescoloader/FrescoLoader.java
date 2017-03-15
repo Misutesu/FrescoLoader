@@ -7,14 +7,21 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 
+import com.facebook.binaryresource.BinaryResource;
+import com.facebook.binaryresource.FileBinaryResource;
+import com.facebook.cache.common.CacheKey;
+import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.core.ImagePipelineFactory;
+import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.imagepipeline.request.Postprocessor;
 
@@ -247,5 +254,30 @@ public class FrescoLoader {
             default:
                 return ScalingUtils.ScaleType.CENTER_CROP;
         }
+    }
+
+    public static boolean isLocalCached(Context context, Uri uri) {
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        DataSource<Boolean> dataSource = imagePipeline.isInDiskCache(uri);
+        if (dataSource == null) {
+            return false;
+        }
+        ImageRequest imageRequest = ImageRequest.fromUri(uri);
+        CacheKey cacheKey = DefaultCacheKeyFactory.getInstance()
+                .getEncodedCacheKey(imageRequest, context);
+        BinaryResource resource = ImagePipelineFactory.getInstance()
+                .getMainFileCache().getResource(cacheKey);
+        return resource != null && dataSource.getResult() != null && dataSource.getResult();
+    }
+
+    public static File getLocalCache(Context context, Uri uri) {
+        if (!isLocalCached(context, uri))
+            return null;
+        ImageRequest imageRequest = ImageRequest.fromUri(uri);
+        CacheKey cacheKey = DefaultCacheKeyFactory.getInstance()
+                .getEncodedCacheKey(imageRequest, context);
+        BinaryResource resource = ImagePipelineFactory.getInstance()
+                .getMainFileCache().getResource(cacheKey);
+        return ((FileBinaryResource) resource).getFile();
     }
 }
