@@ -77,7 +77,11 @@ public class FrescoLoader {
         private int scaleType = CENTER_CROP;
         private int failureImgResId = -1;
         private int placeImgResId = -1;
-        private int circleRound = 0;
+        private float circleRound = 0;
+        private float leftTopRound = 0;
+        private float leftDownRound = 0;
+        private float rightTopRound = 0;
+        private float rightDownRound = 0;
         private int borderWidth = 0;
         private int borderColor = 0;
         private boolean clickRetryEnable = false;
@@ -125,8 +129,17 @@ public class FrescoLoader {
             return this;
         }
 
-        public Builder setCircleRound(int round) {
+        public Builder setCircleRound(float round) {
             circleRound = round;
+            return this;
+        }
+
+        public Builder setCircleRound(float leftTopRound, float leftDownRound, float rightTopRound, float rightDownRound) {
+            this.leftTopRound = leftTopRound;
+            this.leftDownRound = leftDownRound;
+            this.rightTopRound = rightTopRound;
+            this.rightDownRound = rightDownRound;
+            circleRound = 0;
             return this;
         }
 
@@ -182,6 +195,11 @@ public class FrescoLoader {
                     roundingParams.setRoundAsCircle(true);
                 } else if (circleRound != 0) {
                     roundingParams = RoundingParams.fromCornersRadius(circleRound);
+                } else {
+                    if (leftTopRound != 0 || leftDownRound != 0 || rightTopRound != 0 || rightDownRound != 0) {
+                        roundingParams = new RoundingParams();
+                        roundingParams.setCornersRadii(leftTopRound, leftDownRound, rightTopRound, rightDownRound);
+                    }
                 }
                 if (borderWidth > 0) {
                     if (roundingParams == null) {
