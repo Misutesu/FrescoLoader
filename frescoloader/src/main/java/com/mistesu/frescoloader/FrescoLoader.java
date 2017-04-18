@@ -230,8 +230,10 @@ public class FrescoLoader {
                     simpleDraweeView.post(new Runnable() {
                         @Override
                         public void run() {
-                            requestBuilder.setResizeOptions(new ResizeOptions(simpleDraweeView.getWidth()
-                                    , simpleDraweeView.getHeight()));
+                            if (simpleDraweeView.getWidth() > 0 && simpleDraweeView.getHeight() > 0) {
+                                requestBuilder.setResizeOptions(new ResizeOptions(simpleDraweeView.getWidth()
+                                        , simpleDraweeView.getHeight()));
+                            }
                             simpleDraweeView.setController(Fresco.newDraweeControllerBuilder()
                                     .setImageRequest(requestBuilder.build())
                                     .setControllerListener(new ControllerListener(mOnDownloadListener))
