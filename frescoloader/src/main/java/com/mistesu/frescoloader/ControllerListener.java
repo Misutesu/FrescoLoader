@@ -6,7 +6,7 @@ import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.imagepipeline.image.ImageInfo;
 
 /**
- * Created by Administrator on 2017/2/23.
+ * Created by Misutesu on 2017/2/23.
  */
 
 public class ControllerListener extends BaseControllerListener<ImageInfo> {

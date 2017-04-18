@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
@@ -87,30 +86,29 @@ public class FrescoLoader {
         private boolean clickRetryEnable = false;
         private Postprocessor postprocessor;
         private OnDownloadListener mOnDownloadListener;
+        private boolean autoResize = true;
 
         private Uri mUri;
 
-        private Builder(Uri uri) {
+        private Builder(@NonNull Uri uri) {
             mUri = uri;
         }
 
-        private Builder(String url) {
-            if (!TextUtils.isEmpty(url)) {
-                mUri = getUri(url);
-            }
+        private Builder(@NonNull String url) {
+            mUri = getUri(url);
         }
 
         public Builder resize(int width, int height) {
             if (width > 0 && height > 0) {
                 this.width = width;
                 this.height = height;
+                autoResize = false;
             }
             return this;
         }
 
         public Builder setDurationTime(int time) {
-            if (time > 0)
-                this.durationTime = time;
+            if (time > 0) this.durationTime = time;
             return this;
         }
 
@@ -176,7 +174,12 @@ public class FrescoLoader {
             return this;
         }
 
-        public void into(@NonNull SimpleDraweeView simpleDraweeView) {
+        public Builder setAutoResize(boolean autoResize) {
+            this.autoResize = autoResize;
+            return this;
+        }
+
+        public void into(@NonNull final SimpleDraweeView simpleDraweeView) {
             if (mUri != null) {
                 GenericDraweeHierarchy hierarchy = simpleDraweeView.getHierarchy();
                 hierarchy.setFadeDuration(durationTime);
@@ -214,7 +217,7 @@ public class FrescoLoader {
 
                 simpleDraweeView.setHierarchy(hierarchy);
 
-                ImageRequestBuilder requestBuilder = ImageRequestBuilder.newBuilderWithSource(mUri);
+                final ImageRequestBuilder requestBuilder = ImageRequestBuilder.newBuilderWithSource(mUri);
                 if (postprocessor != null) {
                     requestBuilder.setPostprocessor(postprocessor);
                 }
@@ -223,12 +226,28 @@ public class FrescoLoader {
                     requestBuilder.setResizeOptions(new ResizeOptions(width, height));
                 }
 
-                simpleDraweeView.setController(Fresco.newDraweeControllerBuilder()
-                        .setImageRequest(requestBuilder.build())
-                        .setControllerListener(new ControllerListener(mOnDownloadListener))
-                        .setTapToRetryEnabled(clickRetryEnable)
-                        .setOldController(simpleDraweeView.getController())
-                        .build());
+                if (autoResize) {
+                    simpleDraweeView.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            requestBuilder.setResizeOptions(new ResizeOptions(simpleDraweeView.getWidth()
+                                    , simpleDraweeView.getHeight()));
+                            simpleDraweeView.setController(Fresco.newDraweeControllerBuilder()
+                                    .setImageRequest(requestBuilder.build())
+                                    .setControllerListener(new ControllerListener(mOnDownloadListener))
+                                    .setTapToRetryEnabled(clickRetryEnable)
+                                    .setOldController(simpleDraweeView.getController())
+                                    .build());
+                        }
+                    });
+                } else {
+                    simpleDraweeView.setController(Fresco.newDraweeControllerBuilder()
+                            .setImageRequest(requestBuilder.build())
+                            .setControllerListener(new ControllerListener(mOnDownloadListener))
+                            .setTapToRetryEnabled(clickRetryEnable)
+                            .setOldController(simpleDraweeView.getController())
+                            .build());
+                }
             }
         }
     }
