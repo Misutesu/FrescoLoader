@@ -3,8 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FrescoLoader.iml" filepath="$PROJECT_DIR$/FrescoLoader.iml" />
+      <module fileurl="file://C:\MyFiles\Develop\Android\FrescoLoader\FrescoLoader.iml" filepath="C:\MyFiles\Develop\Android\FrescoLoader\FrescoLoader.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\MyFiles\Develop\Android\FrescoLoader\app\app.iml" filepath="C:\MyFiles\Develop\Android\FrescoLoader\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/frescoloader/frescoloader.iml" filepath="$PROJECT_DIR$/frescoloader/frescoloader.iml" />
+      <module fileurl="file://C:\MyFiles\Develop\Android\FrescoLoader\frescoloader\frescoloader.iml" filepath="C:\MyFiles\Develop\Android\FrescoLoader\frescoloader\frescoloader.iml" />
     </modules>
   </component>
 </project>
