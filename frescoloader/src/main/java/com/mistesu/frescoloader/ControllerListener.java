@@ -20,14 +20,16 @@ public class ControllerListener extends BaseControllerListener<ImageInfo> {
     @Override
     public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
         super.onFinalImageSet(id, imageInfo, animatable);
-        if (mOnDownloadListener != null)
+        if (mOnDownloadListener != null) {
             mOnDownloadListener.onDownloadEnd(true);
+        }
     }
 
     @Override
     public void onFailure(String id, Throwable throwable) {
         super.onFailure(id, throwable);
-        if (mOnDownloadListener != null)
+        if (mOnDownloadListener != null) {
             mOnDownloadListener.onDownloadEnd(false);
+        }
     }
 }

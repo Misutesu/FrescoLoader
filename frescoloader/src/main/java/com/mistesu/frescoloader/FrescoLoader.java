@@ -255,8 +255,9 @@ public class FrescoLoader {
     }
 
     public static void clearImgChche(@NonNull File file) {
-        if (file.exists())
+        if (file.exists()) {
             clearImgCache(getUri(file));
+        }
     }
 
     public static void clearImgChche(@NonNull String url) {
@@ -267,7 +268,6 @@ public class FrescoLoader {
         ImagePipeline imagePipeline = Fresco.getImagePipeline();
         imagePipeline.evictFromMemoryCache(uri);
         imagePipeline.evictFromDiskCache(uri);
-        imagePipeline.evictFromCache(uri);
     }
 
     public static Uri getUri(@DrawableRes int resId) {
@@ -293,6 +293,14 @@ public class FrescoLoader {
             default:
                 return ScalingUtils.ScaleType.CENTER_CROP;
         }
+    }
+
+    public static void resume() {
+        Fresco.getImagePipeline().resume();
+    }
+
+    public static void pause() {
+        Fresco.getImagePipeline().pause();
     }
 
     public static boolean isLocalCached(Context context, Uri uri) {
