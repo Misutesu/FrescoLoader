@@ -325,10 +325,11 @@ public class FrescoLoader {
         return Fresco.getImagePipelineFactory().getMainFileCache().getSize();
     }
 
-    public static void clearCache() {
-        ImagePipeline imagePipeline = Fresco.getImagePipeline();
-        imagePipeline.clearMemoryCaches();
-        imagePipeline.clearDiskCaches();
-        imagePipeline.clearCaches();
+    public static void clearDiskCache() {
+        Fresco.getImagePipeline().clearDiskCaches();
+    }
+
+    public static void clearMemoryCache() {
+        Fresco.getImagePipeline().clearMemoryCaches();
     }
 }
