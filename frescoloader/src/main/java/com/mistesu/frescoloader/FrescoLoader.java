@@ -310,13 +310,25 @@ public class FrescoLoader {
     }
 
     public static File getLocalCache(Context context, Uri uri) {
-        if (!isLocalCached(context, uri))
+        if (!isLocalCached(context, uri)) {
             return null;
+        }
         ImageRequest imageRequest = ImageRequest.fromUri(uri);
         CacheKey cacheKey = DefaultCacheKeyFactory.getInstance()
                 .getEncodedCacheKey(imageRequest, context);
         BinaryResource resource = ImagePipelineFactory.getInstance()
                 .getMainFileCache().getResource(cacheKey);
         return ((FileBinaryResource) resource).getFile();
+    }
+
+    public static long getCacheSize() {
+        return Fresco.getImagePipelineFactory().getMainFileCache().getSize();
+    }
+
+    public static void clearCache() {
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        imagePipeline.clearMemoryCaches();
+        imagePipeline.clearDiskCaches();
+        imagePipeline.clearCaches();
     }
 }
