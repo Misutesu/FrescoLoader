@@ -38,8 +38,6 @@ public class FrescoLoader {
 
     private static final String HTTP = "http";
 
-    private static Context mContext;
-
     public static final int CENTER_CROP = 1;
     public static final int FIT_CENTER = 2;
     public static final int FIT_XY = 3;
@@ -49,11 +47,10 @@ public class FrescoLoader {
     }
 
     public static void init(@NonNull Context context) {
-        init(mContext, null, null);
+        init(context, null, null);
     }
 
     public static void init(@NonNull Context context, OkHttpClient okHttpClient, File file) {
-        mContext = context;
         ImagePipelineConfig.Builder builder;
         if (okHttpClient == null) {
             builder = ImagePipelineConfig.newBuilder(context);
@@ -62,7 +59,7 @@ public class FrescoLoader {
         }
         builder.setDownsampleEnabled(true);
         if (file != null && file.exists()) {
-            builder.setMainDiskCacheConfig(DiskCacheConfig.newBuilder(mContext)
+            builder.setMainDiskCacheConfig(DiskCacheConfig.newBuilder(context)
                     .setBaseDirectoryPath(file)
                     .build());
         }
@@ -130,7 +127,9 @@ public class FrescoLoader {
         }
 
         public Builder setDurationTime(int time) {
-            if (time > 0) this.durationTime = time;
+            if (time > 0) {
+                this.durationTime = time;
+            }
             return this;
         }
 
@@ -207,10 +206,10 @@ public class FrescoLoader {
                 hierarchy.setFadeDuration(durationTime);
                 ScalingUtils.ScaleType scale = getScaleType(scaleType);
                 if (failureImgResId != -1) {
-                    hierarchy.setFailureImage(ContextCompat.getDrawable(mContext, failureImgResId), scale);
+                    hierarchy.setFailureImage(failureImgResId, scale);
                 }
                 if (placeImgResId != -1) {
-                    hierarchy.setPlaceholderImage(ContextCompat.getDrawable(mContext, placeImgResId), scale);
+                    hierarchy.setPlaceholderImage(placeImgResId, scale);
                 }
                 hierarchy.setActualImageScaleType(scale);
 
