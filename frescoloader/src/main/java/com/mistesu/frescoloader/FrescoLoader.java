@@ -9,12 +9,14 @@ import android.support.v4.content.ContextCompat;
 import com.facebook.binaryresource.BinaryResource;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.RoundingParams;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.cache.DefaultCacheKeyFactory;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -26,11 +28,15 @@ import com.facebook.imagepipeline.request.Postprocessor;
 
 import java.io.File;
 
+import okhttp3.OkHttpClient;
+
 /**
  * Created by Misutesu on 2017/2/22.
  */
 
 public class FrescoLoader {
+
+    private static final String HTTP = "http";
 
     private static Context mContext;
 
@@ -43,11 +49,24 @@ public class FrescoLoader {
     }
 
     public static void init(@NonNull Context context) {
+        init(mContext, null, null);
+    }
+
+    public static void init(@NonNull Context context, OkHttpClient okHttpClient, File file) {
         mContext = context;
-        ImagePipelineConfig config = ImagePipelineConfig.newBuilder(context)
-                .setDownsampleEnabled(true)
-                .build();
-        Fresco.initialize(context, config);
+        ImagePipelineConfig.Builder builder;
+        if (okHttpClient == null) {
+            builder = ImagePipelineConfig.newBuilder(context);
+        } else {
+            builder = OkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient);
+        }
+        builder.setDownsampleEnabled(true);
+        if (file != null && file.exists()) {
+            builder.setMainDiskCacheConfig(DiskCacheConfig.newBuilder(mContext)
+                    .setBaseDirectoryPath(file)
+                    .build());
+        }
+        Fresco.initialize(context, builder.build());
 //        Fresco.initialize(context);
     }
 
@@ -61,6 +80,9 @@ public class FrescoLoader {
     }
 
     public static Builder load(@NonNull String url) {
+        if (!url.startsWith(HTTP)) {
+            return load(new File(url));
+        }
         return new Builder(url);
     }
 
@@ -252,6 +274,7 @@ public class FrescoLoader {
                 }
             }
         }
+
     }
 
     public static void clearImgChche(@NonNull File file) {
